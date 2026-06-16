@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AI 使用與治理政策 · 政策導覽</title>
+<style>
+  :root{
+    --bg:#eef0f4; --card:#ffffff; --ink:#191b22; --sub:#666b78; --line:#e6e8ee;
+    --brand:#3f3d9c; --brand2:#5b58d6; --core:#4f46e5; --core-bg:#eeedff;
+    --ok:#1f9d57; --okbg:#e7f7ee; --warn:#b9760a; --warnbg:#fbf2e0; --no:#c8362f; --nobg:#fbeceb;
+    --shadow:0 1px 2px rgba(20,20,40,.05),0 10px 30px rgba(20,20,40,.06);
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro TC","PingFang TC","Helvetica Neue","Segoe UI",sans-serif;
+    line-height:1.65;-webkit-font-smoothing:antialiased}
+  .col{max-width:560px;margin:0 auto;background:var(--bg);min-height:100vh;position:relative}
+
+  /* progress */
+  #prog{position:fixed;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,var(--brand),var(--brand2));z-index:60;transition:width .1s linear}
+
+  /* header */
+  .top{position:sticky;top:0;z-index:50;background:rgba(238,240,244,.85);backdrop-filter:saturate(180%) blur(18px);
+    border-bottom:1px solid var(--line);padding:12px 18px 0}
+  .top .titer{display:flex;align-items:flex-start;gap:10px}
+  .top .titer .t{flex:1;min-width:0}
+  .kicker{font-size:11px;color:var(--sub);letter-spacing:.4px}
+  .top h1{font-size:18px;font-weight:850;margin:1px 0 0;letter-spacing:.2px}
+  .expandbtn{flex:none;border:1px solid var(--line);background:#fff;color:var(--brand);font-weight:700;
+    font-size:12px;border-radius:9px;padding:6px 10px;font-family:inherit;cursor:pointer}
+  /* nav chips */
+  nav{display:flex;gap:7px;overflow-x:auto;padding:11px 2px 11px;scrollbar-width:none}
+  nav::-webkit-scrollbar{display:none}
+  nav a{flex:none;font-size:12.5px;font-weight:600;color:var(--sub);text-decoration:none;
+    background:#fff;border:1px solid var(--line);border-radius:999px;padding:6px 13px;white-space:nowrap}
+  nav a.on{background:var(--brand);color:#fff;border-color:var(--brand)}
+
+  .wrap{padding:16px 16px 48px}
+
+  /* hero */
+  .hero{background:linear-gradient(155deg,#23224a,#34336b);color:#fff;border-radius:20px;padding:22px 20px;box-shadow:var(--shadow)}
+  .hero .lead{font-size:19px;font-weight:800;margin:0 0 7px}
+  .hero p{margin:0;font-size:13.5px;color:#cfcfe6}
+  .anchor-law{display:inline-flex;gap:6px;flex-wrap:wrap;margin-top:13px}
+  .anchor-law span{font-size:10.5px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.16);
+    color:#e3e3f5;border-radius:999px;padding:3px 9px}
+
+  .h2{font-size:13px;font-weight:800;color:var(--sub);letter-spacing:.6px;margin:26px 4px 11px;text-transform:none}
+
+  /* spirit cards */
+  .spirit{display:grid;gap:10px}
+  .spirit .s{background:var(--card);border-radius:14px;box-shadow:var(--shadow);padding:13px 15px;border-left:4px solid var(--brand2)}
+  .spirit .s b{font-size:14.5px}
+  .spirit .s p{margin:3px 0 0;font-size:12.5px;color:#3c404c}
+
+  /* trajectory */
+  .traj{background:var(--card);border-radius:14px;box-shadow:var(--shadow);padding:15px 16px;margin-top:12px}
+  .flow{display:flex;align-items:stretch;gap:7px}
+  .flow .st{flex:1;text-align:center;background:#f4f4fb;border-radius:11px;padding:11px 5px;font-weight:700;font-size:12.5px}
+  .flow .st.now{background:var(--core-bg);color:var(--core);box-shadow:inset 0 0 0 1.5px var(--core)}
+  .flow .st small{display:block;font-weight:500;color:var(--sub);font-size:10.5px;margin-top:2px}
+  .flow .ar{align-self:center;color:#b7b7c6;font-weight:800}
+  .traj .cap{font-size:12px;color:var(--sub);margin:11px 0 0;text-align:center}
+
+  /* principles */
+  .prins{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+  .prin{background:var(--card);border-radius:12px;box-shadow:var(--shadow);padding:11px 12px;cursor:pointer;border:1px solid transparent;transition:border-color .15s}
+  .prin:active{border-color:var(--brand2)}
+  .prin .pn{font-size:13.5px;font-weight:750}
+  .prin .pm{font-size:11.5px;color:var(--sub);margin-top:4px;max-height:0;overflow:hidden;transition:max-height .25s ease}
+  .prin.open .pm{max-height:90px}
+  .prin .more{font-size:10px;color:var(--brand2);font-weight:700;margin-top:5px}
+  .prins-note{font-size:11.5px;color:var(--sub);grid-column:1/-1;margin-top:2px}
+
+  /* article cards */
+  .ctrls{display:flex;justify-content:space-between;align-items:center;margin:0 2px 9px}
+  .seg{display:inline-flex;background:#e2e3ec;border-radius:9px;padding:3px}
+  .seg button{border:0;background:transparent;font-size:12.5px;font-weight:650;color:var(--ink);padding:6px 13px;border-radius:7px;font-family:inherit;cursor:pointer}
+  .seg button.on{background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.12)}
+
+  .card{background:var(--card);border-radius:15px;box-shadow:var(--shadow);margin-bottom:10px;overflow:hidden}
+  .card.core{box-shadow:0 0 0 1.5px var(--core),var(--shadow)}
+  .head{display:flex;align-items:center;gap:12px;padding:14px 15px;cursor:pointer}
+  .num{flex:none;width:32px;height:32px;border-radius:9px;background:#eef0fb;color:var(--brand);
+    display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px}
+  .card.core .num{background:var(--core-bg);color:var(--core)}
+  .ht{flex:1;min-width:0}
+  .ht .ti{font-size:15px;font-weight:750}
+  .ht .pl{font-size:12.5px;color:var(--sub);margin-top:1px}
+  .chev{flex:none;color:#c2c3cf;font-size:18px;line-height:1;transition:transform .22s}
+  .card.open .chev{transform:rotate(90deg)}
+  .body{max-height:0;overflow:hidden;transition:max-height .3s ease}
+  .inner{padding:2px 15px 16px;font-size:13.5px;color:#33363f;border-top:1px solid var(--line)}
+  .inner>p{margin:12px 0 8px}
+  ul.kv{list-style:none;margin:0;padding:0}
+  ul.kv li{position:relative;padding:5px 0 5px 17px;font-size:13px}
+  ul.kv li::before{content:"";position:absolute;left:2px;top:12px;width:6px;height:6px;border-radius:50%;background:var(--brand2)}
+  .card.core ul.kv li::before{background:var(--core)}
+  .ref{display:inline-block;margin-top:10px;font-size:11.5px;color:var(--sub);background:#f2f3f8;border-radius:8px;padding:5px 10px}
+  .ref b{color:var(--brand)}
+  .tag{display:inline-block;font-size:10px;font-weight:800;padding:2px 8px;border-radius:999px;margin-left:7px;vertical-align:middle;background:var(--core-bg);color:var(--core)}
+
+  /* traffic light */
+  .lights{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+  .lights div{display:flex;gap:10px;align-items:flex-start;font-size:12.5px;padding:10px 12px;border-radius:11px}
+  .lights .ok{background:var(--okbg)} .lights .ok b{color:var(--ok)}
+  .lights .warn{background:var(--warnbg)} .lights .warn b{color:var(--warn)}
+  .lights .no{background:var(--nobg)} .lights .no b{color:var(--no)}
+  .ld{flex:none;width:11px;height:11px;border-radius:50%;margin-top:4px}
+  .ld.g{background:var(--ok)} .ld.a{background:var(--warn)} .ld.r{background:var(--no)}
+
+  /* seven grid */
+  .seven{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+  .seven div{background:#faf9ff;border:1px solid var(--core-bg);border-radius:11px;padding:10px 11px;font-size:12px}
+  .seven div b{display:block;font-size:13px;margin-top:3px}
+  .seven .em{font-size:17px;line-height:1}
+  .seven .full{grid-column:1/-1;background:#fff4f4;border-color:#ffdcdc}
+
+  /* arch */
+  .arch{background:var(--card);border-radius:15px;box-shadow:var(--shadow);padding:16px}
+  .arch .lay{border-radius:12px;padding:11px 13px;margin-bottom:8px}
+  .arch .lb{font-size:11px;font-weight:800;letter-spacing:.3px}
+  .arch .ld2{font-size:12.5px;margin-top:2px;color:#33363f}
+  .L1{background:#eeedfb} .L1 .lb{color:var(--core)}
+  .L2{background:#e9f1fd} .L2 .lb{color:#1567c8}
+  .L3{background:#e8f6f1} .L3 .lb{color:#11876f}
+  .LX{background:#fdf2e1} .LX .lb{color:#b9760a}
+
+  .foot{font-size:11px;color:var(--sub);text-align:center;margin:26px 6px 0;line-height:1.7}
+  .foot .box{background:#fff;border:1px solid var(--line);border-radius:12px;padding:11px 13px;margin-bottom:11px;color:#5a5e6a}
+</style>
+</head>
+<body>
+<div id="prog"></div>
+<div class="col">
+
+  <div class="top">
+    <div class="titer">
+      <div class="t">
+        <div class="kicker">[公司名稱] · 內部治理 · 基本法</div>
+        <h1>AI 使用與治理政策</h1>
+      </div>
+      <button class="expandbtn" id="expandBtn">展開全部</button>
+    </div>
+    <nav id="nav">
+      <a href="#sec-intro" class="on">導讀</a>
+      <a href="#sec-spirit">三精神</a>
+      <a href="#sec-prin">七原則</a>
+      <a href="#sec-art">十一條條文</a>
+      <a href="#sec-arch">文件架構</a>
+    </nav>
+  </div>
+
+  <div class="wrap">
+
+    <!-- INTRO -->
+    <section id="sec-intro">
+      <div class="hero">
+        <p class="lead">一頁讀懂這份政策</p>
+        <p>它是公司 AI 治理的「憲法」：只訂<strong>原則與底線</strong>，不寫操作細節。怎麼做，交給下層的執行模組（M1–M3）與表單／附錄。</p>
+        <div class="anchor-law">
+          <span>依據《人工智慧基本法》</span><span>資通安全管控指引</span><span>ISO/IEC 42001</span><span>NIST AI RMF</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- SPIRIT -->
+    <section id="sec-spirit">
+      <div class="h2">三項精神</div>
+      <div class="spirit">
+        <div class="s"><b>久而能變</b><p>原則穩定、可長期適用；文字保留彈性，因應情境與技術演進。</p></div>
+        <div class="s"><b>權責延續</b><p>導入 AI 不改變既有法遵與權責；<strong>AI 不得成為品質或責任的擋箭牌</strong>，也不取代人的判斷。</p></div>
+        <div class="s"><b>誠信揭露</b><p>難分人與 AI 產出的時代，透明與信任更重要；重在行動與紀錄，格式不拘。</p></div>
+      </div>
+
+      <div class="traj">
+        <div class="flow">
+          <div class="st">AI 工具<small>幫你寫</small></div>
+          <div class="ar">›</div>
+          <div class="st now">AI 代理人<small>替你做</small></div>
+          <div class="ar">›</div>
+          <div class="st">數位工作者<small>替公司做事</small></div>
+        </div>
+        <p class="cap">AI 從可能「說錯話」走到可能「做錯事」——治理因此必須跟上。</p>
+      </div>
+    </section>
+
+    <!-- PRINCIPLES -->
+    <section id="sec-prin">
+      <div class="h2">第三條 · 七大治理原則（點一下看說明）</div>
+      <div class="prins" id="prins">
+        <div class="prin"><div class="pn">永續發展與福祉</div><div class="pm">AI 應促進長期發展與人類整體福祉。</div><div class="more">說明 ›</div></div>
+        <div class="prin"><div class="pn">人類自主</div><div class="pm">人保有最終判斷與控制，AI 不替人做決定。</div><div class="more">說明 ›</div></div>
+        <div class="prin"><div class="pn">隱私保護與資料治理</div><div class="pm">妥善保護個資、治理資料來源與使用。</div><div class="more">說明 ›</div></div>
+        <div class="prin"><div class="pn">資安與安全</div><div class="pm">確保系統安全、可靠，不造成危害。</div><div class="more">說明 ›</div></div>
+        <div class="prin"><div class="pn">透明與可解釋</div><div class="pm">AI 的使用與運作可被理解、可說明。</div><div class="more">說明 ›</div></div>
+        <div class="prin"><div class="pn">公平與不歧視</div><div class="pm">避免偏誤與歧視性結果。</div><div class="more">說明 ›</div></div>
+        <div class="prin"><div class="pn">問責</div><div class="pm">出事有人負責、可被追究與救濟。</div><div class="more">說明 ›</div></div>
+        <div class="prins-note">即《人工智慧基本法》第 4 條七原則，作為與法令一致的共同語言。</div>
+      </div>
+    </section>
+
+    <!-- ARTICLES -->
+    <section id="sec-art">
+      <div class="h2">政策本文 · 十一條</div>
+      <div class="ctrls">
+        <div class="seg"><button class="on" data-f="all">全部</button><button data-f="core">只看核心</button></div>
+      </div>
+      <div id="list">
+
+        <div class="card" data-core="0">
+          <div class="head"><div class="num">1</div><div class="ht"><div class="ti">目的與依據</div><div class="pl">立規矩、接法令。</div></div><div class="chev">›</div></div>
+          <div class="body"><div class="inner">
+            <ul class="kv"><li>建立 AI 之導入、使用、開發、採購、委外與監督規範。</li><li>銜接基本法、資通安全管控指引、ISO/IEC 42001、NIST AI RMF。</li><li>客戶、法令或合約要求更高者，從高適用。</li></ul>
+            <span class="ref">逐條法規對應 → <b>政策附錄</b></span>
+          </div></div>
+        </div>
+
+        <div class="card" data-core="0">
+          <div class="head"><div class="num">2</div><div class="ht"><div class="ti">適用範圍</div><div class="pl">人用的 AI、替公司做事的 AI，都管。</div></div><div class="chev">›</div></div>
+          <div class="body"><div class="inner">
+            <ul class="kv"><li>生成式 AI、嵌入式 AI、第三方服務與內部部署模型。</li><li><strong>代理型 AI（自主代理人）</strong>：能跨步驟、跨工具行動的「數位工作者」。</li><li>AI 代理人本身亦適用，責任歸屬於指定的人類負責人；委外廠商承辦業務時同受規範。</li></ul>
+          </div></div>
+        </div>
+
+        <div class="card" data-core="0">
+          <div class="head"><div class="num">3</div><div class="ht"><div class="ti">七大治理原則</div><div class="pl">七個共同底線（見上方七原則）。</div></div><div class="chev">›</div></div>
+          <div class="body"><div class="inner">
+            <p>永續發展與福祉 · 人類自主 · 隱私保護與資料治理 · 資安與安全 · 透明與可解釋 · 公平與不歧視 · 問責。</p>
+            <span class="ref">即基本法第 4 條七原則。</span>
+          </div></div>
+        </div>
+
+        <div class="card" data-core="0">
+          <div class="head"><div class="num">4</div><div class="ht"><div class="ti">治理組織與權責</div><div class="pl">董事會扛責任，人退到監督。</div></div><div class="chev">›</div></div>
+          <div class="body"><div class="inner">
+            <ul class="kv"><li><strong>董事會</strong>負最終監督；AI 治理提升到公司治理層級。</li><li>治理單位可<strong>併入既有資安推動組織／風險委員會</strong>（AI 密集者得另設委員會）。</li><li><strong>權責延續</strong>：既有法遵與品質責任不因 AI 增減。</li><li>人員由「逐步執行」轉為<strong>監督代理人、處理例外、把關關鍵節點</strong>。</li></ul>
+          </div></div>
+        </div>
+
+        <div class="card" data-core="0">
+          <div class="head"><div class="num">5</div><div class="ht"><div class="ti">風險分級原則</div><div class="pl">資料越敏感、AI 越自主，越要審。</div></div><div class="chev">›</div></div>
+          <div class="body"><div class="inner">
+            <ul class="kv"><li>問① 資料是否敏感？　問② AI 會不會自己行動？</li><li><strong>取較高者</strong>歸入低／中／高三級。</li></ul>
+            <span class="ref">三級「兩問速查」、各級核准與導入流程 → <b>M1</b></span>
+          </div></div>
+        </div>
+
+        <div class="card" data-core="0">
+          <div class="head"><div class="num">6</div><div class="ht"><div class="ti">允許、限制與禁止</div><div class="pl">紅綠燈三色底線。</div></div><div class="chev">›</div></div>
+          <div class="body"><div class="inner">
+            <div class="lights">
+              <div class="ok"><span class="ld g"></span><span><b>允許</b>　草擬、摘要、翻譯、程式輔助、分類、流程建議——使用者仍對成果負責。</span></div>
+              <div class="warn"><span class="ld a"></span><span><b>限制</b>　未核准不接核心／生產／財會系統；機敏資料須在核准環境；對外與重大產出須人審。</span></div>
+              <div class="no"><span class="ld r"></span><span><b>禁止</b>　帳密金鑰丟公開 AI；冒名侵權；未授權拿受限資料訓練；完全依賴 AI 做重大決策；影子 AI。</span></div>
+            </div>
+            <span class="ref">白名單、申請與例外 → <b>M1 / M2</b></span>
+          </div></div>
+        </div>
+
+        <div class="card core" data-core="1">
+          <div class="head"><div class="num">7</div><div class="ht"><div class="ti">代理型 AI 治理底線 <span class="tag">核心</span></div><div class="pl">每個 AI 代理人，背後都有一個人負責。</div></div><div class="chev">›</div></div>
+          <div class="body"><div class="inner">
+            <p>規範的是「權力與問責」，不綁定任何模型或工具——最耐久的一條。代理人至少守 7 條底線：</p>
+            <div class="seven">
+              <div><span class="em">👤</span><b>具名負責人</b>每個代理人一名人類負責；AI 不具法律人格。</div>
+              <div><span class="em">🪪</span><b>獨立身分</b>專屬機器身分，嚴禁借用自然人帳密。</div>
+              <div><span class="em">🔑</span><b>最小權限</b>夠用就好，不逾負責人本身權限。</div>
+              <div><span class="em">✋</span><b>關鍵行動人工放行</b>對外發送、付款、權限變更、刪除、發布、部署須人核准。</div>
+              <div><span class="em">🛑</span><b>緊急停止</b>可即時中止、撤權。</div>
+              <div><span class="em">🔍</span><b>可追溯</b>留紀錄，追得到人與目的。</div>
+              <div><span class="em">⚖️</span><b>比例治理</b>依風險分級，不一招套全部。</div>
+              <div class="full"><span class="em">⚠️</span><b>放行看事實</b>審核依可查證之事實，不被代理人「自圓其說」牽著走。</div>
+            </div>
+            <span class="ref">完整行動清單、放行層級、登錄與授權矩陣 → <b>M1 §三</b></span>
+          </div></div>
+        </div>
+
+        <div class="card" data-core="0">
+          <div class="head"><div class="num">8</div><div class="ht"><div class="ti">資料、個資與智財</div><div class="pl">資料要乾淨、做 DPIA、別侵權。</div></div><div class="chev">›</div></div>
+          <div class="body"><div class="inner">
+            <ul class="kv"><li>分類分級、最小必要、目的限制、保存與刪除。</li><li>涉個資或機密先去識別化；涉個資做 DPIA。</li><li>用 AI 產出前確認不侵害著作權、商標、專利、營業秘密、肖像權。</li></ul>
+            <span class="ref">細則 → <b>M2 §二</b>；資安控制併入既有資安制度。</span>
+          </div></div>
+        </div>
+
+        <div class="card" data-core="0">
+          <div class="head"><div class="num">9</div><div class="ht"><div class="ti">透明揭露與紀錄留存</div><div class="pl">用了 AI 要講、要留底。</div></div><div class="chev">›</div></div>
+          <div class="body"><div class="inner">
+            <ul class="kv"><li>對外提供 AI 互動／生成內容／輔助決策時，依情境揭露。</li><li>高風險 AI 依法標示警語。</li><li>對外文件、行銷、客戶回覆須人審核准；使用紀錄留存備查。</li></ul>
+            <span class="ref">揭露與標示做法 → <b>宣導包</b>（對內從寬、對外負面表列）</span>
+          </div></div>
+        </div>
+
+        <div class="card" data-core="0">
+          <div class="head"><div class="num">10</div><div class="ht"><div class="ti">事件、訓練、稽核與違規</div><div class="pl">出事報、年年訓、定期查、違規辦。</div></div><div class="chev">›</div></div>
+          <div class="body"><div class="inner">
+            <ul class="kv"><li><strong>事件</strong>：外洩、越權、失控或被攻擊，依通報程序處理；不得隱匿。</li><li><strong>訓練</strong>：每年至少一次；高風險與負責人受進階訓練。</li><li><strong>稽核</strong>：至少每年檢視政策、清冊、風險、事件與訓練紀錄。</li><li><strong>違規</strong>：依規章與法令處理，重大者追究責任。</li></ul>
+            <span class="ref">事件 → <b>M2 §三</b>；訓練 → <b>宣導包</b></span>
+          </div></div>
+        </div>
+
+        <div class="card" data-core="0">
+          <div class="head"><div class="num">11</div><div class="ht"><div class="ti">修訂與複核</div><div class="pl">每年複核，與時俱進。</div></div><div class="chev">›</div></div>
+          <div class="body"><div class="inner">
+            <ul class="kv"><li>至少每年複核一次。</li><li>法規大改、重大事件或技術演進時隨時修訂，經原核准層級核定。</li><li>複核時一併檢視下層模組是否更新。</li></ul>
+          </div></div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ARCH -->
+    <section id="sec-arch">
+      <div class="h2">本政策在整套文件的位置</div>
+      <div class="arch">
+        <div class="lay L1"><div class="lb">第一層 · 政策本文（你正在看）</div><div class="ld2">原則與底線，董事會核准，久而少變。</div></div>
+        <div class="lay L2"><div class="lb">第二層 · 執行辦法 M1–M3</div><div class="ld2">M1 作業辦法（分級＋代理人）· M2 採購／資料／事件 · M3 部門守則。</div></div>
+        <div class="lay L3"><div class="lb">第三層 · 表單與選用</div><div class="ld2">R 表單 A／B／C · 選用宣導包（QA／訓練／揭露）。</div></div>
+        <div class="lay LX"><div class="lb">法規對照（併入政策附錄）</div><div class="ld2">合規追溯集中於政策附錄。</div></div>
+      </div>
+    </section>
+
+    <div class="foot">
+      <div class="box">本頁為政策<strong>白話導覽</strong>，便於快速理解；遇有疑義，以核准之政策正本為準。</div>
+      v0.2 精簡版（SME） · 草稿供內部審議<br>內部文件，未經授權請勿外流
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // reading progress
+  var prog=document.getElementById('prog');
+  function onScroll(){
+    var h=document.documentElement, b=document.body;
+    var st=h.scrollTop||b.scrollTop, sh=(h.scrollHeight||b.scrollHeight)-h.clientHeight;
+    prog.style.width=(sh>0?(st/sh*100):0)+'%';
+    // active nav
+    var secs=document.querySelectorAll('section[id]'), y=st+140, cur='';
+    secs.forEach(function(s){ if(s.offsetTop<=y) cur=s.id; });
+    document.querySelectorAll('#nav a').forEach(function(a){
+      a.classList.toggle('on', a.getAttribute('href')==='#'+cur);
+    });
+  }
+  window.addEventListener('scroll',onScroll,{passive:true});
+
+  // accordion
+  var list=document.getElementById('list');
+  list.addEventListener('click',function(e){
+    var head=e.target.closest('.head'); if(!head) return;
+    var card=head.parentElement, body=card.querySelector('.body');
+    var open=card.classList.toggle('open');
+    body.style.maxHeight=open?body.scrollHeight+'px':'0px';
+  });
+
+  // expand / collapse all
+  var btn=document.getElementById('expandBtn'), exp=false;
+  btn.addEventListener('click',function(){
+    exp=!exp;
+    document.querySelectorAll('#list .card').forEach(function(card){
+      if(card.style.display==='none') return;
+      var body=card.querySelector('.body');
+      if(exp){card.classList.add('open');body.style.maxHeight=body.scrollHeight+'px';}
+      else{card.classList.remove('open');body.style.maxHeight='0px';}
+    });
+    btn.textContent=exp?'收合全部':'展開全部';
+  });
+
+  // filter
+  document.querySelectorAll('.seg button').forEach(function(b){
+    b.addEventListener('click',function(){
+      document.querySelectorAll('.seg button').forEach(x=>x.classList.remove('on'));
+      b.classList.add('on');
+      var f=b.dataset.f;
+      document.querySelectorAll('#list .card').forEach(function(card){
+        var show=(f==='all')||card.dataset.core==='1';
+        card.style.display=show?'':'none';
+      });
+    });
+  });
+
+  // principle tap-to-expand
+  document.getElementById('prins').addEventListener('click',function(e){
+    var p=e.target.closest('.prin'); if(!p) return;
+    p.classList.toggle('open');
+  });
+</script>
+</body>
+</html>
